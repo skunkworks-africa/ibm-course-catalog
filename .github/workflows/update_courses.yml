@@ -1,0 +1,46 @@
+name: Update IBM Courses and Match with Credly Badges
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # This will run the workflow daily at midnight UTC.
+  workflow_dispatch:  # This allows you to manually trigger the workflow from the GitHub UI.
+
+jobs:
+  fetch_and_process_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Fetch IBM Courses
+        run: |
+          curl -o course_feed.json https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json
+
+      - name: Fetch Credly Badges
+        env:
+          CREDLY_TOKEN: ${{ secrets.CREDLY_TOKEN }}
+        run: |
+          curl -u "$CREDLY_TOKEN:" -X GET "https://api.credly.com/v1/badges" -H "Accept: application/json" -o badges.json
+
+      - name: Match Courses to Badges
+        run: python match_courses_to_badges.py
+
+      - name: Commit and Push Updates
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add -A
+          git commit -m "Updated IBM courses and matched badges" || echo "No changes to commit"
+          git push
+
+      - name: Notify Update
+        uses: actions/github-script@0.9.0
+        with:
+          script: |
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'IBM Courses and Badges Update',
+              body: 'IBM courses and matched badges were updated on ${new Date().toISOString()}.'
+            })
