@@ -1,6 +1,6 @@
 Below is a comprehensive Markdown file (`update_ibm_courses_and_badges.md`) that includes the GitHub Actions workflow for updating IBM courses and matching them with Credly badges. It also describes the directory structure, file contents, and the necessary Python requirements.
 
-```markdown
+
 # Update IBM Courses and Match with Credly Badges
 
 This document provides the details of the GitHub Actions workflow to update IBM courses and match them with Credly badges, along with the necessary directory structure and file contents.
