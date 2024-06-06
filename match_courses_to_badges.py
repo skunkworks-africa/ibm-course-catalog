@@ -25,7 +25,6 @@ def load_json(file_path):
         return None
     except json.JSONDecodeError as e:
         logging.error(f"Error decoding JSON file: {e}")
-        return None
 
 def match_courses_to_badges(courses, badges):
     matched_courses = {}
