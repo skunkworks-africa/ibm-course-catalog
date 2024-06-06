@@ -1,5 +1,7 @@
 # IBM Course Catalog by Skunkworks (Pty) Ltd
 
+[![Update IBM Courses and Match with Credly Badges](https://github.com/skunkworksza/ibm-course-catalog/actions/workflows/update_courses.yml/badge.svg)](https://github.com/skunkworksza/ibm-course-catalog/actions/workflows/update_courses.yml)
+
 Welcome to our comprehensive catalog of IBM Training Courses! Here you'll find everything from basic introductory courses to advanced specializations.
 
 ## Table of Contents
