@@ -44,7 +44,7 @@ jobs:
           retries=3
           until_failure=0
           for ((i=0; i<retries; i++)); do
-            python match_courses_to_badges.py && break || sleep 10
+            python ibm-course-catalog/match_courses_to_badges.py && break || sleep 10
             until_failure=$((until_failure+1))
             if [ $until_failure -eq 3 ]; then
               exit 1
