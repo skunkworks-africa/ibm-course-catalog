@@ -44,28 +44,32 @@ def match_courses_to_badges(courses, badges):
         logging.warning("Empty courses or badges data.")
         return matched_courses
 
-    # Iterate through courses
-    for course in courses:
-        if not isinstance(course, dict) or 'course_name' not in course:
-            logging.warning("Invalid course data format. Skipping this course.")
-            continue
-
-        course_name = course.get('course_name')  # Get the course name
-        course_badges = []  # Initialize an empty list to store matched badges for the current course
-
-        # Iterate through badges
-        for badge in badges:
-            if not isinstance(badge, dict) or 'badge_name' not in badge:
-                logging.warning("Invalid badge data format. Skipping this badge.")
+    try:
+        # Iterate through courses
+        for course in courses:
+            if not isinstance(course, dict) or 'course_name' not in course:
+                logging.warning("Invalid course data format. Skipping this course.")
                 continue
 
-            badge_name = badge.get('badge_name')  # Get the badge name
-            # Issue 3: Matching Logic
-            if course_name in badge_name:
-                course_badges.append(badge_name)  # Add the matched badge to the list
+            course_name = course.get('course_name')  # Get the course name
+            course_badges = []  # Initialize an empty list to store matched badges for the current course
 
-        # Issue 5: Storing Matches
-        matched_courses[course_name] = course_badges
+            # Iterate through badges
+            for badge in badges:
+                if not isinstance(badge, dict) or 'badge_name' not in badge:
+                    logging.warning("Invalid badge data format. Skipping this badge.")
+                    continue
+
+                badge_name = badge.get('badge_name')  # Get the badge name
+                # Issue 3: Matching Logic
+                if course_name in badge_name:
+                    course_badges.append(badge_name)  # Add the matched badge to the list
+
+            # Issue 5: Storing Matches
+            matched_courses[course_name] = course_badges
+
+    except Exception as e:
+        logging.error(f"An error occurred while matching courses to badges: {e}")
 
     # Issue 6: Returning Results
     return matched_courses
