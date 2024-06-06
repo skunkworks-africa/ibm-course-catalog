@@ -31,7 +31,7 @@ def main():
     # Load IBM courses data
     courses_data = load_json(file_path)
 
-    # Load Credly badges data
+    # Load Credly badges data (replace 'badges.json' with the actual file path)
     badges_data = load_json('badges.json')
 
     # Match courses to badges
