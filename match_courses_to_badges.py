@@ -79,32 +79,31 @@ def main():
     url = "https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json"
     file_path = "course_feed.json"
 
-    retries = 3
-    for attempt in range(retries):
-        download_json(url, file_path)
-        courses_data = load_json(file_path)
-        if courses_data:
-            break
-        elif attempt < retries - 1:
-            time.sleep(10)  # Wait before retrying
-    
-    if not courses_data:
-        logging.error("Failed to load courses data.")
+    # Issue: Error handling for downloading JSON
+    download_json(url, file_path)
+
+    # Issue: Error handling for loading courses data
+    courses_data = load_json(file_path)
+    if courses_data is None:
+        logging.error("Failed to load courses data. Exiting.")
         return
 
+    # Issue: Loading badges data
     badges_file_path = "badges.json"
     badges_data = load_json(badges_file_path)
-
-    if not badges_data:
-        logging.error("Failed to load badges data.")
+    if badges_data is None:
+        logging.error("Failed to load badges data. Exiting.")
         return
 
+    # Issue: Matching courses to badges
     matched_courses = match_courses_to_badges(courses_data, badges_data)
 
-    if matched_courses is None:
-        logging.error("Failed to match courses to badges.")
+    # Issue: Error handling for accessing matched_courses
+    if not isinstance(matched_courses, dict):
+        logging.error("Error in matching courses to badges. Exiting.")
         return
 
+    # Issue: Printing matched courses and badges
     for course, badges in matched_courses.items():
         print(f"Course: {course}")
         if badges:
