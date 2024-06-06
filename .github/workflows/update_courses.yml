@@ -54,8 +54,8 @@ jobs:
       - name: Commit and Push Updates
         if: success() && github.event_name != 'schedule'
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "raydo@skunkworks.africa"
+          git config --global user.name "burnt-exe"
           git add -A
           git diff-index --quiet HEAD || git commit -m "Updated IBM courses and matched badges" && git push
 
