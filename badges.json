@@ -1,0 +1,20 @@
+[
+  {
+    "badge_id": "1",
+    "badge_name": "Python Basics",
+    "description": "Completion of Python Basics course",
+    "image_url": "https://example.com/python-basics-badge.png"
+  },
+  {
+    "badge_id": "2",
+    "badge_name": "Advanced Python",
+    "description": "Completion of Advanced Python course",
+    "image_url": "https://example.com/advanced-python-badge.png"
+  },
+  {
+    "badge_id": "3",
+    "badge_name": "Data Science Fundamentals",
+    "description": "Completion of Data Science Fundamentals course",
+    "image_url": "https://example.com/data-science-fundamentals-badge.png"
+  }
+]
