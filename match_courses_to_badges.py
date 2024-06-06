@@ -13,8 +13,24 @@ def load_json(file_path):
     return data
 
 def match_courses_to_badges(courses, badges):
-    # Matching logic goes here
-    pass
+    matched_courses = {}  # Initialize an empty dictionary to store matched courses and badges
+
+    # Iterate through courses
+    for course in courses:
+        course_name = course.get('course_name')  # Get the course name
+        course_badges = []  # Initialize an empty list to store matched badges for the current course
+
+        # Iterate through badges
+        for badge in badges:
+            badge_name = badge.get('badge_name')  # Get the badge name
+            # Check if there is a match between course and badge (example condition)
+            if course_name in badge_name:
+                course_badges.append(badge_name)  # Add the matched badge to the list
+
+        # Add the course and its matched badges to the dictionary
+        matched_courses[course_name] = course_badges
+
+    return matched_courses
 
 def main():
     # URL of the JSON file containing IBM course data
