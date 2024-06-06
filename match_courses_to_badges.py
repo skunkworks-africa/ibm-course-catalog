@@ -15,19 +15,44 @@ def download_json(url, file_path):
     except requests.exceptions.RequestException as e:
         logging.error(f"Failed to download JSON file from {url}: {e}")
 
-def fetch_and_parse_json(url):
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-        json_data = response.json()
-        logging.info("JSON data fetched and parsed successfully.")
-        return json_data
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Failed to fetch JSON data from {url}: {e}")
-        return None
-    except json.JSONDecodeError as e:
-        logging.error(f"Error decoding JSON data from {url}: {e}")
-        return None
+class CredlyAPI:
+    def __init__(self, base_url, authorization_token):
+        self.base_url = base_url
+        self.authorization_token = authorization_token
+        self.headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {authorization_token}',
+            'Content-Type': 'application/json'
+        }
+
+    def make_request(self, method, endpoint, data=None):
+        try:
+            response = requests.request(method, f"{self.base_url}/{endpoint}", headers=self.headers, json=data)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Failed to make {method} request to {endpoint}: {e}")
+            return None
+
+    def get(self, endpoint):
+        return self.make_request('GET', endpoint)
+
+    def fetch_badges(self):
+        # Fetch badges from Credly
+        return self.get("badges")
+
+# Example usage:
+if __name__ == "__main__":
+    base_url = "https://sandbox.credly.com/v1"  # Sandbox environment
+    authorization_token = "your_authorization_token_here"
+    
+    credly_api = CredlyAPI(base_url, authorization_token)
+    badges_data = credly_api.fetch_badges()
+    if badges_data:
+        print("Badges Data:", badges_data)
+    else:
+        print("Failed to fetch badges data.")
+
 
 def load_json(file_path):
     try:
