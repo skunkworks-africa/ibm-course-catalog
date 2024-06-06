@@ -1,0 +1,26 @@
+[
+  {
+    "course_id": "1",
+    "course_name": "Introduction to Python",
+    "description": "An introductory course covering the basics of Python programming.",
+    "duration": "4 weeks",
+    "level": "Beginner",
+    "image_url": "https://example.com/intro-to-python-image.png"
+  },
+  {
+    "course_id": "2",
+    "course_name": "Data Science with Python",
+    "description": "A comprehensive course on data science using Python libraries.",
+    "duration": "8 weeks",
+    "level": "Intermediate",
+    "image_url": "https://example.com/data-science-python-image.png"
+  },
+  {
+    "course_id": "3",
+    "course_name": "Machine Learning Fundamentals",
+    "description": "Fundamental concepts and techniques of machine learning.",
+    "duration": "12 weeks",
+    "level": "Advanced",
+    "image_url": "https://example.com/machine-learning-image.png"
+  }
+]
