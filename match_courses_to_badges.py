@@ -1,41 +1,24 @@
-import json
+import requests
 
-def load_json(file_path):
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return data
-
-def match_courses_to_badges(courses, badges):
-    matches = {}
-    for course in courses:
-        course_name = course['name']
-        course_description = course.get('description', '')
-        matched_badges = []
-        for badge in badges:
-            badge_name = badge['name']
-            badge_description = badge.get('description', '')
-            # Example matching logic: check if course name or description contains badge name or description
-            if badge_name.lower() in course_name.lower() or badge_name.lower() in course_description.lower() or \
-               badge_description.lower() in course_name.lower() or badge_description.lower() in course_description.lower():
-                matched_badges.append(badge_name)
-        matches[course_name] = matched_badges
-    return matches
+# Function to download the JSON file
+def download_json(url, file_path):
+    response = requests.get(url)
+    with open(file_path, 'wb') as file:
+        file.write(response.content)
 
 def main():
-    courses_data = load_json('course_feed.json')
-    badges_data = load_json('badges.json')
+    # URL of the JSON file containing IBM course data
+    url = "https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json"
+    
+    # File path where you want to save the downloaded JSON file
+    file_path = "course_feed.json"
 
-    matched_courses = match_courses_to_badges(courses_data, badges_data)
+    # Download the JSON file
+    download_json(url, file_path)
 
-    for course, badges in matched_courses.items():
-        print(f"Course: {course}")
-        if badges:
-            print("Matched Badges:")
-            for badge in badges:
-                print(f"- {badge}")
-        else:
-            print("No matched badges found for this course.")
-        print()
+    print("Course feed JSON file downloaded successfully.")
+
+    # Your existing code for matching courses to badges can go here
 
 if __name__ == "__main__":
     main()
