@@ -1,6 +1,7 @@
 import requests
 import json
 import logging
+import time
 
 logging.basicConfig(filename='fetch_and_process_data.log', level=logging.ERROR)
 
@@ -54,10 +55,15 @@ def main():
     url = "https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json"
     file_path = "course_feed.json"
 
-    download_json(url, file_path)
-
-    courses_data = load_json(file_path)
-
+    retries = 3
+    for attempt in range(retries):
+        download_json(url, file_path)
+        courses_data = load_json(file_path)
+        if courses_data:
+            break
+        elif attempt < retries - 1:
+            time.sleep(10)  # Wait before retrying
+    
     if not courses_data:
         logging.error("Failed to load courses data.")
         return
@@ -70,6 +76,10 @@ def main():
         return
 
     matched_courses = match_courses_to_badges(courses_data, badges_data)
+
+    if matched_courses is None:
+        logging.error("Failed to match courses to badges.")
+        return
 
     for course, badges in matched_courses.items():
         print(f"Course: {course}")
