@@ -31,6 +31,19 @@ def load_json(file_path):
             logging.error(f"Unexpected error: {e}")
         return None
 
+def fetch_and_parse_json(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        json_data = response.json()
+        return json_data
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Failed to fetch JSON data from {url}: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        logging.error(f"Error decoding JSON data from {url}: {e}")
+        return None
+
 def match_courses_to_badges(courses, badges):
     matched_courses = {}  # Initialize an empty dictionary to store matched courses and badges
 
@@ -82,10 +95,10 @@ def main():
     # Issue: Error handling for downloading JSON
     download_json(url, file_path)
 
-    # Issue: Error handling for loading courses data
-    courses_data = load_json(file_path)
+    # Fetch and parse JSON data
+    courses_data = fetch_and_parse_json(url)
     if courses_data is None:
-        logging.error("Failed to load courses data. Exiting.")
+        logging.error("Failed to fetch or parse courses data. Exiting.")
         return
 
     # Issue: Loading badges data
