@@ -68,11 +68,12 @@ def match_courses_to_badges(courses, badges):
             # Issue 5: Storing Matches
             matched_courses[course_name] = course_badges
 
+        # Issue 6: Returning Results
+        return matched_courses
+
     except Exception as e:
         logging.error(f"An error occurred while matching courses to badges: {e}")
-
-    # Issue 6: Returning Results
-    return matched_courses
+        return matched_courses  # Ensure that matched_courses is always returned, even in case of error
 
 def main():
     url = "https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json"
