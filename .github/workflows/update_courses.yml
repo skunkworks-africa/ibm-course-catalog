@@ -15,17 +15,41 @@ jobs:
 
       - name: Fetch IBM Courses
         run: |
-          curl -o course_feed.json https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json
+          retries=3
+          until_failure=0
+          for ((i=0; i<retries; i++)); do
+            curl -o course_feed.json https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json && break || sleep 10
+            until_failure=$((until_failure+1))
+            if [ $until_failure -eq 3 ]; then
+              exit 1
+            fi
+          done
 
       - name: Fetch Credly Badges
         env:
           CREDLY_TOKEN: ${{ secrets.CREDLY_TOKEN }}
         run: |
-          curl -u "$CREDLY_TOKEN:" -X GET "https://api.credly.com/v1/badges" -H "Accept: application/json" -o badges.json
+          retries=3
+          until_failure=0
+          for ((i=0; i<retries; i++)); do
+            curl -u "$CREDLY_TOKEN:" -X GET "https://api.credly.com/v1/badges" -H "Accept: application/json" -o badges.json && break || sleep 10
+            until_failure=$((until_failure+1))
+            if [ $until_failure -eq 3 ]; then
+              exit 1
+            fi
+          done
 
       - name: Match Courses to Badges
         run: |
-          python match_courses_to_badges.py || exit 0
+          retries=3
+          until_failure=0
+          for ((i=0; i<retries; i++)); do
+            python match_courses_to_badges.py && break || sleep 10
+            until_failure=$((until_failure+1))
+            if [ $until_failure -eq 3 ]; then
+              exit 1
+            fi
+          done
 
       - name: Commit and Push Updates
         if: success() && github.event_name != 'schedule'
