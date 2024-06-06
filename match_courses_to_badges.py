@@ -23,8 +23,12 @@ def load_json(file_path):
     except FileNotFoundError as e:
         logging.error(f"JSON file not found: {e}")
         return None
-    except json.JSONDecodeError as e:
-        logging.error(f"Error decoding JSON file: {e}")
+    except Exception as e:
+        if isinstance(e, json.JSONDecodeError):
+            logging.error(f"Error decoding JSON file: {e}")
+        else:
+            logging.error(f"Unexpected error: {e}")
+        return None
 
 def match_courses_to_badges(courses, badges):
     matched_courses = {}
