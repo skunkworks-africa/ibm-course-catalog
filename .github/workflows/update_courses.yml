@@ -11,7 +11,9 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          path: 'ibm-course-catalog'  # Specify the desired path for cloning the repository
 
       - name: Fetch IBM Courses
         run: |
@@ -21,7 +23,6 @@ jobs:
             curl -o course_feed.json https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json && break || sleep 10
             until_failure=$((until_failure+1))
             if [ $until_failure -eq 3 ]; then
-              echo "Failed to fetch IBM courses"
               exit 1
             fi
           done
@@ -36,22 +37,26 @@ jobs:
             curl -u "$CREDLY_TOKEN:" -X GET "https://api.credly.com/v1/badges" -H "Accept: application/json" -o badges.json && break || sleep 10
             until_failure=$((until_failure+1))
             if [ $until_failure -eq 3 ]; then
-              echo "Failed to fetch Credly badges"
               exit 1
             fi
           done
 
       - name: Match Courses to Badges
         run: |
-          if [ ! -f "match_courses_to_badges.py" ]; then
-            echo "Error: match_courses_to_badges.py not found"
-            exit 1
-          fi
-          python match_courses_to_badges.py
+          retries=3
+          until_failure=0
+          for ((i=0; i<retries; i++)); do
+            python ibm-course-catalog/match_courses_to_badges.py && break || sleep 10
+            until_failure=$((until_failure+1))
+            if [ $until_failure -eq 3 ]; then
+              exit 1
+            fi
+          done
 
       - name: Commit and Push Updates
         if: success() && github.event_name != 'schedule'
         run: |
+          cd ibm-course-catalog
           git config --global user.email "raydo@skunkworks.africa"
           git config --global user.name "burnt-exe"
           git add -A
