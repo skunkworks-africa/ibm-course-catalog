@@ -1,7 +1,6 @@
 import requests
 import json
 import logging
-import time
 
 logging.basicConfig(filename='fetch_and_process_data.log', level=logging.ERROR)
 
@@ -40,19 +39,6 @@ class CredlyAPI:
     def fetch_badges(self):
         # Fetch badges from Credly
         return self.get("badges")
-
-# Example usage:
-if __name__ == "__main__":
-    base_url = "https://sandbox.credly.com/v1"  # Sandbox environment
-    authorization_token = "your_authorization_token_here"
-    
-    credly_api = CredlyAPI(base_url, authorization_token)
-    badges_data = credly_api.fetch_badges()
-    if badges_data:
-        print("Badges Data:", badges_data)
-    else:
-        print("Failed to fetch badges data.")
-
 
 def load_json(file_path):
     try:
@@ -108,11 +94,21 @@ def match_courses_to_badges(courses, badges):
         return matched_courses
 
 def main():
+    base_url = "https://sandbox.credly.com/v1"  # Sandbox environment
+    authorization_token = "your_authorization_token_here"
+    
+    credly_api = CredlyAPI(base_url, authorization_token)
+    badges_data = credly_api.fetch_badges()
+    if badges_data:
+        print("Badges Data:", badges_data)
+    else:
+        print("Failed to fetch badges data.")
+
     url = "https://www.ibm.com/training/files/GTPjson/CourseFeed_Global.json"
     file_path = "course_feed.json"
 
     download_json(url, file_path)
-    courses_data = fetch_and_parse_json(url)
+    courses_data = load_json(file_path)
 
     if courses_data is None:
         logging.error("Failed to fetch or parse courses data. Exiting.")
