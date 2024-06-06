@@ -1,0 +1,30 @@
+name: Update README
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Python script to generate table
+        run: python generate_table.py > table.md
+
+      - name: Update README
+        run: |
+          sed -i '/<!-- START_SECTION: courses_badges -->/,/<!-- END_SECTION: courses_badges -->/c\<!-- START_SECTION: courses_badges -->\n' table.md '\n<!-- END_SECTION: courses_badges -->/' README.md
+          sed -i '/<!-- START_SECTION: courses_badges -->/r table.md' README.md
