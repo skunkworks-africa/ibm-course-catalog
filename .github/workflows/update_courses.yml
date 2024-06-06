@@ -24,17 +24,19 @@ jobs:
           curl -u "$CREDLY_TOKEN:" -X GET "https://api.credly.com/v1/badges" -H "Accept: application/json" -o badges.json
 
       - name: Match Courses to Badges
-        run: python match_courses_to_badges.py
+        run: |
+          python match_courses_to_badges.py || exit 0
 
       - name: Commit and Push Updates
+        if: success() && github.event_name != 'schedule'
         run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           git add -A
-          git commit -m "Updated IBM courses and matched badges" || echo "No changes to commit"
-          git push
+          git diff-index --quiet HEAD || git commit -m "Updated IBM courses and matched badges" && git push
 
       - name: Notify Update
+        if: success() && github.event_name != 'schedule'
         uses: actions/github-script@0.9.0
         with:
           script: |
